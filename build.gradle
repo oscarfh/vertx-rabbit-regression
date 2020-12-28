@@ -1,0 +1,38 @@
+plugins {
+    id "java"
+}
+
+group "org.example"
+version "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+	compile "io.vertx:vertx-rabbitmq-client:${vertxVersion}"
+	compile "io.vertx:vertx-rx-java:${vertxVersion}"
+	//compile "io.vertx:vertx-rx-java2:${vertxVersion}"
+
+	compile "io.reactivex:rxjava:1.3.5"
+
+	compile "org.slf4j:slf4j-api:1.7.30"
+	compile "ch.qos.logback:logback-classic:1.2.3"
+	compile "com.fasterxml.jackson.core:jackson-databind:2.12.0"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.6.0"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+	//testCompile "junit:junit:${junitVersion}"
+	testCompile "io.vertx:vertx-junit5:${vertxVersion}"
+	testCompile "io.vertx:vertx-unit:${vertxVersion}"
+
+	testCompile "org.testcontainers:testcontainers:1.15.1"
+	testCompile "org.testcontainers:junit-jupiter:1.15.1"
+	testCompile "org.testcontainers:rabbitmq:1.15.1"
+	testCompile "org.testcontainers:toxiproxy:1.15.1"
+
+}
+
+test {
+    useJUnitPlatform()
+}

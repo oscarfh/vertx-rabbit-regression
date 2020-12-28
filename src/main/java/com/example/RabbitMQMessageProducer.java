@@ -63,7 +63,7 @@ public class RabbitMQMessageProducer {
 
         long brokerConfirmTimeoutMs = configuration.getRabbitMQBrokerConfirmTimeoutMs();
         rabbitMQClient
-                .rxBasicPublish(topic, "", Buffer.buffer(messageAsBytes))
+                .rxBasicPublish(topic, "", new JsonObject().put("body", message))
                 .flatMap(aVoid -> rabbitMQClient.rxWaitForConfirms(brokerConfirmTimeoutMs))
                 .doOnSuccess(aVoid -> LOGGER.debug("Published message {} to RabbitMQ topic {}", message, topic))
                 .doOnError(throwable -> LOGGER.warn("Failed to publish message {} to RabbitMQ topic {}", message, topic, throwable))

@@ -174,10 +174,6 @@ class VertxRabbitMQTest {
     }
 
     public static <T> T decode(byte[] bytes, Class<T> type) {
-        try {
-            return MAPPER.readValue(bytes, type);
-        } catch (Exception e) {
-            throw new DecodeException("Failed to decode: " + e.getMessage());
-        }
+        return (T) new String(bytes);
     }
 }

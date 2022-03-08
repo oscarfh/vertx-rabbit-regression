@@ -139,12 +139,17 @@ class VertxRabbitMQTest {
         rabbitMQOptions.setReconnectInterval(500);
         RabbitMQClient rabbitMQClient = RabbitMQClient.create(vertx, rabbitMQOptions);
 
+        rabbitMQClient.getDelegate().addConnectionEstablishedCallback(event -> LOGGER.warn("connection established"));
+
         boolean durable = DEFAULT_RABBITMQ_QUEUE_DURABLE;
         boolean autoDelete = DEFAULT_RABBITMQ_QUEUE_AUTO_DELETE;
         boolean exclusive = DEFAULT_RABBITMQ_QUEUE_EXCLUSIVE;
         return rabbitMQClient.rxStart()
-                .flatMap(aVoid -> rabbitMQClient.rxExchangeDeclare(topic, RABBITMQ_DEFAULT_EXCHANGE_TYPE,
-                        RABBITMQ_DEFAULT_EXCHANGE_DURABLE, RABBITMQ_DEFAULT_EXCHANGE_AUTO_DELETE))
+                .flatMap(aVoid -> {
+                    LOGGER.warn("Declaring exchange");
+                    return rabbitMQClient.rxExchangeDeclare(topic, RABBITMQ_DEFAULT_EXCHANGE_TYPE,
+                            RABBITMQ_DEFAULT_EXCHANGE_DURABLE, RABBITMQ_DEFAULT_EXCHANGE_AUTO_DELETE);
+                })
                 .flatMap(aVoid -> rabbitMQClient.rxQueueDeclare(TEST_TOPIC, durable, exclusive, autoDelete))
                 .flatMap(declareResult -> rabbitMQClient.rxQueueBind(TEST_TOPIC, topic, ""))
                 .flatMap(aVoid -> rabbitMQClient.rxBasicConsumer(TEST_TOPIC))
